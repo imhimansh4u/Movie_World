@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import "../css/Home.css";
 import Movie_Card from "../components/Movie_Card.jsx";
 import { searchMovies, getPopularMovies } from "../services/api.js";
+import { Link , useNavigate } from "react-router-dom";
 
 function Home() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -28,29 +29,13 @@ function Home() {
   }, []);
 
   // it is a function to hadnle when search Button is clicked
+  const navigate = useNavigate();
   const handleSearch = async (e) => {
     e.preventDefault();
     if(!searchQuery.trim()){
         return;
     }
-    if(loading){   // if it is already searching something , then simply return for any diff search request
-        return;
-    }
-    setLoading(true);
-    try {
-        const searchResults = await searchMovies(searchQuery);
-        setMovies(searchResults);
-        setError(null);
-    } catch (err) {
-        console.log(err)
-        setError("Failed to search Movie...")
-    }
-    finally{
-        setLoading(false);
-    }
-
-    setSearchQuery("");
-
+    navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
   };
 
   return (
